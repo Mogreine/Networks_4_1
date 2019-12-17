@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TaskServer.src
@@ -68,6 +69,64 @@ namespace TaskServer.src
                             var request = Encoding.UTF8.GetString(buffer, 0, byteCount);
                             Console.WriteLine("[Server] Client wrote {0}", request);
                             _logWrite($"[Server] Client wrote {request}");
+
+                            request = request.Trim();
+                            var tmp = request.Split(' ');
+                            var cmd = tmp[0].ToLower();
+                            byte[] respond = null;
+                            if (tmp.Length == 1)
+                            {
+                                respond = Encoding.UTF8.GetBytes($"There's no parameter.");
+                            }
+                            else if (cmd == "hello")
+                            {
+                                respond = Encoding.UTF8.GetBytes($"hello variat {tmp[1]}");
+                            }
+                            else if (cmd == "bye")
+                            {
+                                respond = Encoding.UTF8.GetBytes($"bye variat {tmp[1]}");
+                                break;
+                            }
+                            else if (cmd == "encrypt")
+                            {
+                                for (int i = 2; i < tmp.Length; i++)
+                                {
+                                    tmp[1] += tmp[i];
+                                }
+                                var prms = tmp[1].Trim().Split(',');
+                                var msg = "";
+                                var pass_start = msg.LastIndexOf(", ") + 2;
+                                var pass = prms.Last();
+                                for (int i = 0; i < prms.Length - 1; i++)
+                                {
+                                    msg += prms[i];
+                                }
+
+                                respond = Cypher.Encrypt(Encoding.UTF8.GetBytes(msg), pass);
+                            }
+                            else if (cmd == "decrypt")
+                            {
+                                for (int i = 2; i < tmp.Length; i++)
+                                {
+                                    tmp[1] += tmp[i];
+                                }
+                                var prms = tmp[1].Trim().Split(',');
+                                var msg = "";
+                                var pass = prms.Last();
+                                for (int i = 0; i < prms.Length - 1; i++)
+                                {
+                                    msg += prms[i];
+                                }
+
+                                respond = Cypher.Decrypt(Encoding.UTF8.GetBytes(msg), pass);
+                            }
+                            else
+                            {
+                                respond = Encoding.UTF8.GetBytes($"Invalid command.");
+                            }
+                            await networkStream.WriteAsync(respond, 0, respond.Length);
+                            Console.WriteLine($"[Server] Response has been written: {new UTF8Encoding().GetString(respond)}");
+                            _logWrite($"[Server] Response has been written: {new UTF8Encoding().GetString(respond)}");
                         }
                     }
 
