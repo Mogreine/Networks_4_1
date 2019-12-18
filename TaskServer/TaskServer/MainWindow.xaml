@@ -5,9 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskServer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Server" Height="350" Width="525">
     <Grid>
-        <TextBlock Name="LogBox" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Log:" VerticalAlignment="Top" Height="299" Width="497"/>
+        <TextBox VerticalScrollBarVisibility="Auto" Name="LogBox" HorizontalAlignment="Left" Margin="10,152,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="157" Width="497"/>
+        <TextBox Name="IpBox" HorizontalAlignment="Left" Height="23" Margin="78,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="136"/>
+        <TextBox Name="PortBox" HorizontalAlignment="Left" Height="23" Margin="78,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="136"/>
+            
+        <Label Content="IP" HorizontalAlignment="Left" Margin="78,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Port" HorizontalAlignment="Left" Margin="78,78,0,0" VerticalAlignment="Top"/>
+        <Button Click="StartServer" Content="Start" HorizontalAlignment="Left" Margin="349,41,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Click="StopServer" Content="Stop" HorizontalAlignment="Left" Margin="349,104,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>
 </Window>

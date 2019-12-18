@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -8,17 +9,78 @@ using System.Threading.Tasks;
 
 namespace TaskServer.src
 {
+    public static class Methods
+    {
+        public static Task<T> WithCancellation<T>(this Task<T> task,
+            CancellationToken token)
+        {
+            return task.ContinueWith(t => t.GetAwaiter().GetResult(), token);
+        }
+    }
+
     class ServerAsync
     {
         private object _lock; // sync lock 
         private List<Task> _connections; // pending connections
         private Action<string> _logWrite;
+        private CancellationToken _cancellationToken;
+        public int Port;
+        public IPAddress IP;
+        private TcpListener tcpListener;
 
-        public ServerAsync(int port, Action<string> logWrite)
+        public ServerAsync(int port, Action<string> logWrite, CancellationToken cancellationToken)
         {
+            Port = port;
             _lock = new Object();
             _connections = new List<Task>();
             _logWrite = logWrite;
+            _cancellationToken = cancellationToken;
+            IP = GetLocalIPAddress();
+        }
+
+        public void StartServer()
+        {
+            tcpListener = new TcpListener(IP, Port);
+            tcpListener.Start();
+            StartListener();
+        }
+
+        public void StopServer()
+        {
+            tcpListener.Stop();
+        }
+
+        public static IPAddress GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip;
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
+        }
+        
+        public Task StartListener()
+        {
+            return Task.Run(async () =>
+            {
+                while (!_cancellationToken.IsCancellationRequested)
+                {
+                    var tcpClient = await tcpListener.AcceptTcpClientAsync().WithCancellation(_cancellationToken);
+                    if (_cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+                    Console.WriteLine("[Server] Client has connected");
+                    _logWrite("[Server] Client has connected");
+                    var task = StartHandleConnectionAsync(tcpClient);
+                    if (task.IsFaulted)
+                        await task;
+                }
+            }, _cancellationToken);
         }
 
         // Register and handle the connection
@@ -59,8 +121,9 @@ namespace TaskServer.src
                 {
                     Console.WriteLine("[Server] Reading from client");
                     _logWrite("[Server] Reading from client");
+                    bool stopCmd = false;
 
-                    while (tcpClient.Connected)
+                    while (tcpClient.Connected && !stopCmd && !_cancellationToken.IsCancellationRequested)
                     {
                         if (networkStream.DataAvailable)
                         {
@@ -80,49 +143,42 @@ namespace TaskServer.src
                             }
                             else if (cmd == "hello")
                             {
-                                respond = Encoding.UTF8.GetBytes($"hello variat {tmp[1]}");
+                                respond = Encoding.UTF8.GetBytes($"hello variant {tmp[1]}");
                             }
                             else if (cmd == "bye")
                             {
-                                respond = Encoding.UTF8.GetBytes($"bye variat {tmp[1]}");
-                                break;
+                                respond = Encoding.UTF8.GetBytes($"bye variant {tmp[1]}");
+                                stopCmd = true;
                             }
-                            else if (cmd == "encrypt")
+                            else if (cmd == "encrypt" || cmd == "decrypt")
                             {
                                 for (int i = 2; i < tmp.Length; i++)
                                 {
                                     tmp[1] += tmp[i];
                                 }
                                 var prms = tmp[1].Trim().Split(',');
-                                var msg = "";
-                                var pass_start = msg.LastIndexOf(", ") + 2;
                                 var pass = prms.Last();
-                                for (int i = 0; i < prms.Length - 1; i++)
+
+                                var pass_start = request.LastIndexOf(", ") + byteCount - request.Length;
+
+                                var msgBytes = new List<byte>();
+                                for (int i = 8; i < pass_start; i++)
                                 {
-                                    msg += prms[i];
+                                    msgBytes.Add(buffer[i]);
                                 }
 
-                                respond = Cypher.Encrypt(Encoding.UTF8.GetBytes(msg), pass);
-                            }
-                            else if (cmd == "decrypt")
-                            {
-                                for (int i = 2; i < tmp.Length; i++)
+                                if (cmd == "encrypt")
                                 {
-                                    tmp[1] += tmp[i];
+                                    respond = Cypher.Encrypt(msgBytes.ToArray(), pass);
                                 }
-                                var prms = tmp[1].Trim().Split(',');
-                                var msg = "";
-                                var pass = prms.Last();
-                                for (int i = 0; i < prms.Length - 1; i++)
+                                else
                                 {
-                                    msg += prms[i];
+                                    respond = Cypher.Decrypt(msgBytes.ToArray(), pass);
                                 }
-
-                                respond = Cypher.Decrypt(Encoding.UTF8.GetBytes(msg), pass);
                             }
                             else
                             {
-                                respond = Encoding.UTF8.GetBytes($"Invalid command.");
+                                respond = Encoding.UTF8.GetBytes("Invalid command.");
                             }
                             await networkStream.WriteAsync(respond, 0, respond.Length);
                             Console.WriteLine($"[Server] Response has been written: {new UTF8Encoding().GetString(respond)}");
@@ -131,32 +187,8 @@ namespace TaskServer.src
                     }
 
                     _logWrite($"[Server] Client disconected");
-                    /*
-                    var serverResponseBytes = Encoding.UTF8.GetBytes("Hello from server");
-                    await networkStream.WriteAsync(serverResponseBytes, 0, serverResponseBytes.Length);
-                    Console.WriteLine("[Server] Response has been written");
-                    _logWrite("[Server] Response has been written");
-                    */
                 }
-            });
-        }
-
-        public Task StartListener()
-        {
-            return Task.Run(async () =>
-            {
-                var tcpListener = TcpListener.Create(8000);
-                tcpListener.Start();
-                while (true)
-                {
-                    var tcpClient = await tcpListener.AcceptTcpClientAsync();
-                    Console.WriteLine("[Server] Client has connected");
-                    _logWrite("[Server] Client has connected");
-                    var task = StartHandleConnectionAsync(tcpClient);
-                    if (task.IsFaulted)
-                        await task;
-                }
-            });
+            }, _cancellationToken);
         }
     }
 }

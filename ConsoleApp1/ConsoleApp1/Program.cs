@@ -14,7 +14,7 @@ namespace ConsoleApp1
     {
         public static int Main(String[] args)
         {
-            int port = 8000;
+            int port = 123;
             string serverIp = "192.168.0.10";
             try
             {
@@ -42,6 +42,7 @@ namespace ConsoleApp1
                     if (req_splt[0] == "bye")
                     {
                         flag = false;
+                        data = Encoding.UTF8.GetBytes(request);
                     }
                     else if (req_splt[0].ToLower() == "encrypt" || req_splt[0].ToLower() == "decrypt")
                     {
