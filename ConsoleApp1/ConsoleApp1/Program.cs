@@ -23,12 +23,7 @@ namespace ConsoleApp1
 
                 var data = new byte[1024];
                 NetworkStream stream = client.GetStream();
-
-                /*
-                string msg = "I'm in bitch!!!";
-                var msgBytes = Encoding.UTF8.GetBytes(msg);
-                stream.Write(msgBytes, 0, msgBytes.Length);
-                */
+                
                 var request = "";
                 Console.WriteLine("Write messages to the server");
                 request = "";
