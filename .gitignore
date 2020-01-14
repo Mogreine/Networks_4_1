@@ -259,3 +259,8 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+Lab1/Lab1/Properties/AssemblyInfo.cs
+Lab1/Lab1/Properties/Resources.Designer.cs
+Lab1/Lab1/Properties/Resources.resx
+Lab1/Lab1/Properties/Settings.Designer.cs
+Lab1/Lab1/Properties/Settings.settings

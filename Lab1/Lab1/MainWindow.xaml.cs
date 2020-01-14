@@ -77,5 +77,54 @@ namespace Lab1
             var respond = RunCommand(command.ToString());
             LogBox.Text = respond;
         }
+
+        private void RunIpConfig(object sender, RoutedEventArgs e)
+        {
+            var command = new StringBuilder();
+            command.Append("ipconfig ");
+            if (AllIpConfig.IsChecked.Value)
+            {
+                command.Append("/all ");
+            }
+            else if (ReleaseIpConfig.IsChecked.Value)
+            {
+                command.Append($"/release {ReleaseValueIpConfig.Text} ");
+            }
+            else if (RenewIpConfig.IsChecked.Value)
+            {
+                command.Append($"/renew {RenewValueIpConfig.Text} ");
+            }
+            else if (FlushDNSIpConfig.IsChecked.Value)
+            {
+                command.Append("/flushdns");
+            }
+            else if (RegisterDNSIpConfig.IsChecked.Value)
+            {
+                command.Append($"/registerdns");
+            }
+            var respond = RunCommand(command.ToString());
+            LogBox.Text = respond;
+        }
+
+        private void RunTracert(object sender, RoutedEventArgs e)
+        {
+            var command = new StringBuilder();
+            command.Append("tracert ");
+            if (DTracert.IsChecked.Value)
+            {
+                command.Append("-d ");
+            }
+            if (HTracert.IsChecked.Value && HValueTracert.Text != "")
+            {
+                command.Append($"-h {HValueTracert.Text} ");
+            }
+            if (WTracert.IsChecked.Value && WValueTracert.Text != "")
+            {
+                command.Append($"-w {WValueTracert.Text} ");
+            }
+            command.Append(AddressValueTracert.Text);
+            var respond = RunCommand(command.ToString());
+            LogBox.Text = respond;
+        }
     }
 }

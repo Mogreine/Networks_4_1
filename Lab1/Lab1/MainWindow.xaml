@@ -5,29 +5,52 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab1"
         mc:Ignorable="d"
-        Title="Lab1" Height="514.286" Width="640.643">
+        Title="Lab1" Height="531.148" Width="712.304">
     <Grid>
-        <TabControl Margin="0,0,0,167">
+        <TabControl Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="628">
             <TabItem Header="Ping">
-                <Grid Margin="0,0,1,4">
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="288" Width="624" Margin="0,0,-2,0">
                     <Label Content="Address" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <TextBox Name="AddressValPing" Height="23" TextWrapping="Wrap" Margin="68,12,318,248"/>
-                    <TextBox Name="NValPing" Height="23" TextWrapping="Wrap" Width="120" Margin="68,71,438,190"/>
-                    <TextBox Name="LValPing" Height="23" TextWrapping="Wrap" Width="120" Margin="68,99,438,162"/>
+                    <TextBox Name="NValPing" Height="23" TextWrapping="Wrap" Width="120" Margin="61,70,443,195"/>
+                    <TextBox Name="LValPing" Height="23" TextWrapping="Wrap" Width="120" Margin="61,97,443,168"/>
                     <CheckBox Name="APing" Content="-a" Margin="10,41,563,218"/>
                     <CheckBox Name="LPing" Content="-l" Margin="10,101,563,164"/>
                     <CheckBox Name="NPing" Content="-n" Margin="10,71,563,188"/>
                     <CheckBox Name="FPing" Content="-f" Margin="10,125,563,135"/>
                     <CheckBox Name="IPing" Content="-i" Margin="10,154,563,107" RenderTransformOrigin="0.579,1.039"/>
                     <CheckBox Name="WPing" Content="-w" Margin="10,182,563,79" RenderTransformOrigin="0.579,1.039"/>
-                    <TextBox Name="IValPing" Height="23" TextWrapping="Wrap" Width="120" Margin="68,154,438,107" RenderTransformOrigin="-0.588,0.592"/>
-                    <TextBox Name="WValPing" Height="23" TextWrapping="Wrap" Width="120" Margin="68,182,438,79"/>
-                    <Button Content="Run" Margin="10,244,541,0" VerticalAlignment="Top" Width="75" Click="RunPing"/>
+                    <TextBox Name="IValPing" Height="23" TextWrapping="Wrap" Width="120" Margin="61,152,443,113"/>
+                    <TextBox Name="WValPing" Height="23" TextWrapping="Wrap" Width="120" Margin="61,180,443,85"/>
+                    <Button Content="Run" Margin="10,244,539,0" VerticalAlignment="Top" Width="75" Click="RunPing"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Security" />
-            <TabItem Header="Details" />
+            <TabItem Header="IpConfig">
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="288" Width="624" Margin="0,0,-2,0">
+                    <RadioButton Name="AllIpConfig" Content="/all" Margin="10,10,555,265"/>
+                    <RadioButton Name="ReleaseIpConfig" Content="/release" Margin="10,34,539,235"/>
+                    <TextBox Name="ReleaseValueIpConfig" Height="23" TextWrapping="Wrap" Text="" Width="120" Margin="90,30,414,235"/>
+                    <RadioButton Name="RenewIpConfig" Content="/renew" Margin="10,62,555,213"/>
+                    <TextBox Name="RenewValueIpConfig" Height="23" TextWrapping="Wrap" Text="" Width="120" Margin="90,58,414,207"/>
+                    <RadioButton Name="FlushDNSIpConfig" Content="/flushdns" Margin="10,90,538,175"/>
+                    <RadioButton Name="DisplayDNSIpConfig" Content="/displaydns" Margin="10,118,516,147"/>
+                    <RadioButton Name="RegisterDNSIpConfig" Content="/registerdns" Margin="10,146,516,123"/>
+                    <Button Content="Run" Margin="10,170,555,97" Click="RunIpConfig"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Tracert">
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="288" Width="624" Margin="0,0,-2,0">
+                    <CheckBox Name="DTracert" Content="-d" HorizontalAlignment="Left" Margin="12,43,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.938,0.267"/>
+                    <CheckBox Name="HTracert" Content="-h" HorizontalAlignment="Left" Margin="12,75,0,0" VerticalAlignment="Top"/>
+                    <CheckBox Name="WTracert" Content="-w" HorizontalAlignment="Left" Margin="12,107,0,0" VerticalAlignment="Top"/>
+                    <TextBox Name="WValueTracert" Height="23" TextWrapping="Wrap" Width="120" Margin="83,99,421,166"/>
+                    <Button Content="Run" Margin="10,165,563,100" Click="RunTracert"/>
+                    <Label Content="Address" Margin="10,10,546,250"/>
+                    <TextBox Name="AddressValueTracert" Height="23" TextWrapping="Wrap" Width="120" Margin="83,15,421,250"/>
+                    <TextBox Name="HValueTracert" Height="23" TextWrapping="Wrap" Width="120" Margin="83,67,421,198"/>
+                </Grid>
+            </TabItem>
         </TabControl>
-        <TextBox VerticalScrollBarVisibility="Auto" Name="LogBox" HorizontalAlignment="Left" Margin="10,321,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="152" Width="613"/>
+        <TextBox VerticalScrollBarVisibility="Auto" Name="LogBox" Margin="10,331,0,0" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Height="144" Width="628"/>
     </Grid>
 </Window>
