@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab1"
         mc:Ignorable="d"
-        Title="Lab1" Height="531.148" Width="712.304">
+        Title="Lab1" Height="528.246" Width="674.572">
     <Grid>
         <TabControl Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="628">
             <TabItem Header="Ping">
@@ -48,6 +48,24 @@
                     <Label Content="Address" Margin="10,10,546,250"/>
                     <TextBox Name="AddressValueTracert" Height="23" TextWrapping="Wrap" Width="120" Margin="83,15,421,250"/>
                     <TextBox Name="HValueTracert" Height="23" TextWrapping="Wrap" Width="120" Margin="83,67,421,198"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Route">
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="288" Width="624" Margin="0,0,-2,0">
+                    <CheckBox Name="FRoute" Content="-f" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <CheckBox Name="PRoute" Content="-p" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top"/>
+                    <RadioButton Name="PrintRoute" Content="print" Margin="10,50,523,216"/>
+                    <RadioButton Name="AddRoute" Content="add" Margin="10,77,523,189"/>
+                    <RadioButton Name="DeleteRoute" Content="delete" Margin="10,104,523,162"/>
+                    <RadioButton Name="ChangeRoute" Content="change" Margin="10,131,523,135"/>
+                    <Button Click="RunRoute" Content="Run" HorizontalAlignment="Left" Margin="10,158,0,0" VerticalAlignment="Top" Width="75"/>
+                    <TextBox Name="AddressRoute" Height="23" TextWrapping="Wrap" Width="120" Margin="106,46,398,219"/>
+                    <TextBox Name="NetmaskRoute" Height="23" TextWrapping="Wrap" Width="120" Margin="231,46,273,219"/>
+                    <TextBox Name="GatewayRoute" Height="23" TextWrapping="Wrap" Width="120" Margin="356,46,148,219"/>
+                    <Label Content="Network address" Margin="106,12,419,247"/>
+                    <Label Content="Netmask" Margin="231,12,294,247"/>
+                    <Label Content="Gateway address" Margin="356,12,169,247"/>
+
                 </Grid>
             </TabItem>
         </TabControl>

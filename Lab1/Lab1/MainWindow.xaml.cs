@@ -126,5 +126,38 @@ namespace Lab1
             var respond = RunCommand(command.ToString());
             LogBox.Text = respond;
         }
+
+        private void RunRoute(object sender, RoutedEventArgs e)
+        {
+            var command = new StringBuilder();
+            command.Append("route ");
+            if (FRoute.IsChecked.Value)
+            {
+                command.Append("-f ");
+            }
+            if (PRoute.IsChecked.Value)
+            {
+                command.Append($"-p ");
+            }
+            if (AddRoute.IsChecked.Value && NetmaskRoute.Text != "" && AddressRoute.Text != "" && GatewayRoute.Text != "")
+            {
+                command.Append($"add {AddressRoute.Text} mask {NetmaskRoute.Text} {GatewayRoute.Text}");
+            }
+            if (ChangeRoute.IsChecked.Value && NetmaskRoute.Text != "" && AddressRoute.Text != "" && GatewayRoute.Text != "")
+            {
+                command.Append($"change {AddressRoute.Text} mask {NetmaskRoute.Text} {GatewayRoute.Text}");
+            }
+            if (PrintRoute.IsChecked.Value)
+            {
+                command.Append($"print {AddressRoute.Text}");
+            }
+            if (DeleteRoute.IsChecked.Value && AddressRoute.Text != "")
+            {
+                command.Append($"delete {AddressRoute.Text}");
+            }
+            var respond = RunCommand(command.ToString());
+            LogBox.Text = respond;
+        }
+
     }
 }
